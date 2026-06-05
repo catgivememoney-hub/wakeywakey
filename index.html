@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello Jefferson</title>
     <style>
-        /* 全局样式：粉色系简约风格 */
+        /* 全局样式 */
         body {
             margin: 0;
             padding: 0;
@@ -13,18 +13,19 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #ffe5ec; /* 温暖的浅粉色 */
-            font-family: 'Arial Rounded MT Bold', 'Helvetica Neue', sans-serif;
+            background-color: #ffe5ec;
+            font-family: 'Arial Rounded MT Bold', 'Impact', 'Helvetica Neue', sans-serif;
             overflow: hidden;
+            position: relative;
         }
 
         /* 界面容器 */
         .container {
             text-align: center;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.3s ease;
+            z-index: 10;
         }
 
-        /* 隐藏类 */
         .hidden {
             display: none !important;
         }
@@ -32,7 +33,7 @@
         /* 第一页样式 */
         .page1 h1 {
             font-size: 3.5rem;
-            color: #ff85a2; /* 深粉色文字 */
+            color: #ff85a2;
             margin-bottom: 30px;
             letter-spacing: 2px;
         }
@@ -52,39 +53,30 @@
         .next-btn:hover {
             background-color: #ff85a2;
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(255, 133, 162, 0.5);
         }
 
-        /* 第二页样式：动态文字效果 */
-        .page2 h1 {
-            font-size: 4rem;
-            color: #ff477e;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            display: inline-block;
-            /* 绑定复合动画：包含放大缩小、扭曲形状和规律位移 */
-            animation: textCrazy 3s infinite ease-in-out;
+        /* 全局剧烈屏幕抖动动画（应用在 body 上） */
+        .screen-shake {
+            animation: globalShake 0.1s infinite;
         }
 
-        /* 核心动画效果 */
-        @keyframes textCrazy {
-            0% {
-                transform: scale(1) rotate(0deg) translateY(0px);
-            }
-            25% {
-                transform: scale(1.3) rotate(5deg) translateY(-20px) skewX(-10deg);
-                color: #ff7096;
-            }
-            50% {
-                transform: scale(0.8) rotate(-5deg) translateY(0px) skewX(10deg);
-                color: #ff0a54;
-            }
-            75% {
-                transform: scale(1.4) rotate(3deg) translateY(20px) skewY(-5deg);
-                color: #ff477e;
-            }
-            100% {
-                transform: scale(1) rotate(0deg) translateY(0px);
-            }
+        @keyframes globalShake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-10px, 8px) rotate(-1deg); }
+            40% { transform: translate(9px, -9px) rotate(1deg); }
+            60% { transform: translate(-7px, -6px) rotate(-0.5deg); }
+            80% { transform: translate(8px, 9px) rotate(1.5deg); }
+            100% { transform: translate(-5px, 5px) rotate(0deg); }
+        }
+
+        /* 乱窜文本的通用样式 */
+        .chaotic-text {
+            position: absolute;
+            font-weight: 900;
+            white-space: nowrap;
+            user-select: none;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+            pointer-events: none; /* 防止挡住鼠标 */
         }
     </style>
 </head>
@@ -92,31 +84,93 @@
 
     <div id="page1" class="container page1">
         <h1>HEllO JEFFERSON</h1>
-        <button class="next-btn" onclick="goToNextPage()">next</button>
-    </div>
-
-    <div id="page2" class="container page2 hidden">
-        <h1>GET YOUR ASS UP！</h1>
+        <button class="next-btn" onclick="startChaos()">next</button>
     </div>
 
     <script>
-        function goToNextPage() {
+        // 预设一些疯狂的颜色供文字随机选择
+        const colors = ['#ff0a54', '#ff477e', '#ff7096', '#ff85a2', '#ff5c8a', '#ff0055', '#d90429', '#ff007f'];
+
+        function startChaos() {
+            // 隐藏第一页
             const page1 = document.getElementById('page1');
-            const page2 = document.getElementById('page2');
-            
-            // 渐隐第一页
-            page1.style.opacity = '0';
-            
-            setTimeout(() => {
-                page1.classList.add('hidden');
-                page2.classList.remove('hidden');
-                // 渐显第二页
-                page2.style.opacity = '0';
-                setTimeout(() => {
-                    page2.style.opacity = '1';
-                }, 50);
-            }, 500); // 等待半秒渐隐动画结束
+            page1.classList.add('hidden');
+
+            // 激活全屏剧烈抖动
+            document.body.classList.add('screen-shake');
+
+            // 动态生成大量乱窜的文字
+            const textCount = 45; // 屏幕上同时存在的文字数量
+            for (let i = 0; i < textCount; i++) {
+                createWarningText();
+            }
         }
+
+        function createWarningText() {
+            const el = document.createElement('div');
+            el.className = 'chaotic-text';
+            el.innerText = 'GET YOUR ASS UP！';
+            
+            // 随机初始样式
+            const fontSize = Math.random() * (5.5 - 1.5) + 1.5; // 随机字号 1.5rem 到 5.5rem
+            el.style.fontSize = `${fontSize}rem`;
+            el.style.color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // 随机初始位置
+            let posX = Math.random() * window.innerWidth;
+            let posY = Math.random() * window.innerHeight;
+            el.style.left = `${posX}px`;
+            el.style.top = `${posY}px`;
+
+            document.body.appendChild(el);
+
+            // 给每个文字注入独立的、随时改变的运动速度和缩放方向
+            let speedX = (Math.random() - 0.5) * 25; // 极快的横向速度
+            let speedY = (Math.random() - 0.5) * 25; // 极快的纵向速度
+            let scale = 1;
+            let scaleDirection = Math.random() > 0.5 ? 0.05 : -0.05;
+            let rotation = Math.random() * 360;
+            let rotationSpeed = (Math.random() - 0.5) * 20;
+
+            // 每帧更新位置（高频核心动画循环）
+            function animate() {
+                posX += speedX;
+                posY += speedY;
+                scale += scaleDirection;
+                rotation += rotationSpeed;
+
+                // 碰到屏幕边缘反弹
+                if (posX < -200 || posX > window.innerWidth + 200) speedX *= -1;
+                if (posY < -100 || posY > window.innerHeight + 100) speedY *= -1;
+
+                // 缩放大小限制
+                if (scale > 2.2 || scale < 0.5) scaleDirection *= -1;
+
+                // 随机微调速度，增加不规则的“乱窜”感
+                if (Math.random() > 0.95) {
+                    speedX = (Math.random() - 0.5) * 25;
+                    speedY = (Math.random() - 0.5) * 25;
+                }
+
+                // 应用形变：位移 + 缩放 + 旋转
+                el.style.transform = `translate(${speedX}px, ${speedY}px) scale(${scale}) rotate(${rotation}deg)`;
+                el.style.left = `${posX}px`;
+                el.style.top = `${posY}px`;
+
+                requestAnimationFrame(animate);
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // 窗口大小改变时自适应
+        window.addEventListener('resize', () => {
+            const elements = document.querySelectorAll('.chaotic-text');
+            elements.forEach(el => {
+                el.style.left = `${Math.random() * window.innerWidth}px`;
+                el.style.top = `${Math.random() * window.innerHeight}px`;
+            });
+        });
     </script>
 </body>
 </html>
