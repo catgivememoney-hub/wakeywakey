@@ -14,7 +14,7 @@
             align-items: center;
             height: 100vh;
             background-color: #ffe5ec;
-            font-family: 'Arial Rounded MT Bold', 'Impact', 'Helvetica Neue', sans-serif;
+            font-family: 'Impact', 'Arial Rounded MT Bold', sans-serif;
             overflow: hidden;
             position: relative;
         }
@@ -22,8 +22,7 @@
         /* 界面容器 */
         .container {
             text-align: center;
-            transition: opacity 0.3s ease;
-            z-index: 10;
+            z-index: 9999; /* 确保第一页按钮在最上层 */
         }
 
         .hidden {
@@ -55,28 +54,28 @@
             transform: translateY(-3px);
         }
 
-        /* 全局剧烈屏幕抖动动画（应用在 body 上） */
+        /* 超极限全屏剧烈抖动 */
         .screen-shake {
-            animation: globalShake 0.1s infinite;
+            animation: superShake 0.05s infinite;
         }
 
-        @keyframes globalShake {
+        @keyframes superShake {
             0% { transform: translate(0, 0) rotate(0deg); }
-            20% { transform: translate(-10px, 8px) rotate(-1deg); }
-            40% { transform: translate(9px, -9px) rotate(1deg); }
-            60% { transform: translate(-7px, -6px) rotate(-0.5deg); }
-            80% { transform: translate(8px, 9px) rotate(1.5deg); }
-            100% { transform: translate(-5px, 5px) rotate(0deg); }
+            25% { transform: translate(-15px, 15px) rotate(-2deg); }
+            50% { transform: translate(15px, -15px) rotate(2deg); }
+            75% { transform: translate(-15px, -15px) rotate(1.5deg); }
+            100% { transform: translate(15px, 15px) rotate(-1.5deg); }
         }
 
-        /* 乱窜文本的通用样式 */
+        /* 乱窜文本样式 */
         .chaotic-text {
             position: absolute;
             font-weight: 900;
             white-space: nowrap;
             user-select: none;
-            text-shadow: 3px 3px 0px rgba(0,0,0,0.1);
-            pointer-events: none; /* 防止挡住鼠标 */
+            line-height: 0.8;
+            pointer-events: none; /* 防止鼠标被卡死 */
+            will-change: transform, left, top; /* 优化浏览器渲染性能防止卡顿 */
         }
     </style>
 </head>
@@ -84,39 +83,39 @@
 
     <div id="page1" class="container page1">
         <h1>HEllO JEFFERSON</h1>
-        <button class="next-btn" onclick="startChaos()">next</button>
+        <button class="next-btn" onclick="startExtremeChaos()">next</button>
     </div>
 
     <script>
-        // 预设一些疯狂的颜色供文字随机选择
-        const colors = ['#ff0a54', '#ff477e', '#ff7096', '#ff85a2', '#ff5c8a', '#ff0055', '#d90429', '#ff007f'];
+        // 极致刺眼的色彩搭配
+        const colors = ['#ff0a54', '#ff477e', '#ff7096', '#ff85a2', '#ff5c8a', '#ff0055', '#ff0000', '#d90429', '#mff007f'];
 
-        function startChaos() {
+        function startExtremeChaos() {
             // 隐藏第一页
             const page1 = document.getElementById('page1');
             page1.classList.add('hidden');
 
-            // 激活全屏剧烈抖动
+            // 开启背景极速抖动
             document.body.classList.add('screen-shake');
 
-            // 动态生成大量乱窜的文字
-            const textCount = 45; // 屏幕上同时存在的文字数量
+            // 爆表数量：直接生成 120 个文本矩阵占满屏幕
+            const textCount = 120; 
             for (let i = 0; i < textCount; i++) {
-                createWarningText();
+                createExtremeText();
             }
         }
 
-        function createWarningText() {
+        function createExtremeText() {
             const el = document.createElement('div');
             el.className = 'chaotic-text';
             el.innerText = 'GET YOUR ASS UP！';
             
-            // 随机初始样式
-            const fontSize = Math.random() * (5.5 - 1.5) + 1.5; // 随机字号 1.5rem 到 5.5rem
+            // 随机大小，大号字用来塞满屏幕
+            const fontSize = Math.random() * (7 - 2) + 2; 
             el.style.fontSize = `${fontSize}rem`;
             el.style.color = colors[Math.floor(Math.random() * colors.length)];
             
-            // 随机初始位置
+            // 初始全屏幕随机散落
             let posX = Math.random() * window.innerWidth;
             let posY = Math.random() * window.innerHeight;
             el.style.left = `${posX}px`;
@@ -124,36 +123,35 @@
 
             document.body.appendChild(el);
 
-            // 给每个文字注入独立的、随时改变的运动速度和缩放方向
-            let speedX = (Math.random() - 0.5) * 25; // 极快的横向速度
-            let speedY = (Math.random() - 0.5) * 25; // 极快的纵向速度
-            let scale = 1;
-            let scaleDirection = Math.random() > 0.5 ? 0.05 : -0.05;
+            // 极限速度设置 (数值越大，速度越快)
+            let speedX = (Math.random() - 0.5) * 60; 
+            let speedY = (Math.random() - 0.5) * 60; 
+            let scale = Math.random() * 2;
+            let scaleDirection = Math.random() > 0.5 ? 0.15 : -0.15;
             let rotation = Math.random() * 360;
-            let rotationSpeed = (Math.random() - 0.5) * 20;
+            let rotationSpeed = (Math.random() - 0.5) * 40; // 极速自转
 
-            // 每帧更新位置（高频核心动画循环）
             function animate() {
                 posX += speedX;
                 posY += speedY;
                 scale += scaleDirection;
                 rotation += rotationSpeed;
 
-                // 碰到屏幕边缘反弹
-                if (posX < -200 || posX > window.innerWidth + 200) speedX *= -1;
+                // 碰到边界瞬间反弹
+                if (posX < -300 || posX > window.innerWidth + 300) speedX *= -1;
                 if (posY < -100 || posY > window.innerHeight + 100) speedY *= -1;
 
-                // 缩放大小限制
-                if (scale > 2.2 || scale < 0.5) scaleDirection *= -1;
+                // 极限缩放频率
+                if (scale > 3.0 || scale < 0.3) scaleDirection *= -1;
 
-                // 随机微调速度，增加不规则的“乱窜”感
-                if (Math.random() > 0.95) {
-                    speedX = (Math.random() - 0.5) * 25;
-                    speedY = (Math.random() - 0.5) * 25;
+                // 极高概率（每帧 10% 概率）发生没有任何规律的突然变向、变速，造成“乱窜”的视觉冲击
+                if (Math.random() > 0.90) {
+                    speedX = (Math.random() - 0.5) * 60;
+                    speedY = (Math.random() - 0.5) * 60;
                 }
 
-                // 应用形变：位移 + 缩放 + 旋转
-                el.style.transform = `translate(${speedX}px, ${speedY}px) scale(${scale}) rotate(${rotation}deg)`;
+                // 渲染位置与变形
+                el.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
                 el.style.left = `${posX}px`;
                 el.style.top = `${posY}px`;
 
@@ -163,7 +161,7 @@
             requestAnimationFrame(animate);
         }
 
-        // 窗口大小改变时自适应
+        // 屏幕尺寸改变自适应
         window.addEventListener('resize', () => {
             const elements = document.querySelectorAll('.chaotic-text');
             elements.forEach(el => {
