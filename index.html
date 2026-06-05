@@ -14,22 +14,23 @@
             align-items: center;
             height: 100vh;
             background-color: #ffe5ec;
-            font-family: 'Impact', 'Arial Rounded MT Bold', sans-serif;
+            font-family: 'Impact', 'Arial Black', sans-serif;
             overflow: hidden;
             position: relative;
+            transition: background 0.02s;
         }
 
         /* 界面容器 */
         .container {
             text-align: center;
-            z-index: 9999; /* 确保第一页按钮在最上层 */
+            z-index: 99999; /* 确保第一页按钮不被遮挡 */
         }
 
         .hidden {
             display: none !important;
         }
 
-        /* 第一页样式 */
+        /* 第一页简约样式 */
         .page1 h1 {
             font-size: 3.5rem;
             color: #ff85a2;
@@ -54,17 +55,27 @@
             transform: translateY(-3px);
         }
 
-        /* 超极限全屏剧烈抖动 */
+        /* 极速背景黑白闪烁动画（闪死人效果） */
+        .crazy-flash {
+            animation: flashBang 0.04s infinite alternate;
+        }
+
+        @keyframes flashBang {
+            0% { background-color: #000000; }
+            100% { background-color: #ffffff; }
+        }
+
+        /* 极限全屏剧烈抖动 */
         .screen-shake {
-            animation: superShake 0.05s infinite;
+            animation: superShake 0.03s infinite;
         }
 
         @keyframes superShake {
             0% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(-15px, 15px) rotate(-2deg); }
-            50% { transform: translate(15px, -15px) rotate(2deg); }
-            75% { transform: translate(-15px, -15px) rotate(1.5deg); }
-            100% { transform: translate(15px, 15px) rotate(-1.5deg); }
+            25% { transform: translate(-25px, 25px) rotate(-3deg); }
+            50% { transform: translate(25px, -25px) rotate(3deg); }
+            75% { transform: translate(-25px, -25px) rotate(2deg); }
+            100% { transform: translate(25px, 25px) rotate(-2deg); }
         }
 
         /* 乱窜文本样式 */
@@ -73,9 +84,9 @@
             font-weight: 900;
             white-space: nowrap;
             user-select: none;
-            line-height: 0.8;
-            pointer-events: none; /* 防止鼠标被卡死 */
-            will-change: transform, left, top; /* 优化浏览器渲染性能防止卡顿 */
+            line-height: 0.7;
+            pointer-events: none;
+            will-change: transform, left, top;
         }
     </style>
 </head>
@@ -83,39 +94,39 @@
 
     <div id="page1" class="container page1">
         <h1>HEllO JEFFERSON</h1>
-        <button class="next-btn" onclick="startExtremeChaos()">next</button>
+        <button class="next-btn" onclick="startSeizureChaos()">next</button>
     </div>
 
     <script>
-        // 极致刺眼的色彩搭配
-        const colors = ['#ff0a54', '#ff477e', '#ff7096', '#ff85a2', '#ff5c8a', '#ff0055', '#ff0000', '#d90429', '#mff007f'];
+        // 霓虹极光刺眼配色
+        const neonColors = ['#ff0055', '#00ffcc', '#ffff00', '#ff00ff', '#00ff00', '#ff3300', '#ff00aa', '#0000ff'];
 
-        function startExtremeChaos() {
+        function startSeizureChaos() {
             // 隐藏第一页
-            const page1 = document.getElementById('page1');
-            page1.classList.add('hidden');
+            document.getElementById('page1').classList.add('hidden');
 
-            // 开启背景极速抖动
+            // 激活背景极速黑白闪烁 + 视网膜震动
+            document.body.classList.add('crazy-flash');
             document.body.classList.add('screen-shake');
 
-            // 爆表数量：直接生成 120 个文本矩阵占满屏幕
-            const textCount = 120; 
+            // 铺满屏幕：直接生成 200 个文本
+            const textCount = 200; 
             for (let i = 0; i < textCount; i++) {
-                createExtremeText();
+                createLightningText();
             }
         }
 
-        function createExtremeText() {
+        function createLightningText() {
             const el = document.createElement('div');
             el.className = 'chaotic-text';
             el.innerText = 'GET YOUR ASS UP！';
             
-            // 随机大小，大号字用来塞满屏幕
-            const fontSize = Math.random() * (7 - 2) + 2; 
+            // 超大字号，确保密不透风占满全屏
+            const fontSize = Math.random() * (8 - 3) + 3; 
             el.style.fontSize = `${fontSize}rem`;
-            el.style.color = colors[Math.floor(Math.random() * colors.length)];
+            el.style.color = neonColors[Math.floor(Math.random() * neonColors.length)];
             
-            // 初始全屏幕随机散落
+            // 全屏幕随机出生点
             let posX = Math.random() * window.innerWidth;
             let posY = Math.random() * window.innerHeight;
             el.style.left = `${posX}px`;
@@ -123,13 +134,13 @@
 
             document.body.appendChild(el);
 
-            // 极限速度设置 (数值越大，速度越快)
-            let speedX = (Math.random() - 0.5) * 60; 
-            let speedY = (Math.random() - 0.5) * 60; 
+            // 光速级别的移动速度 (最大 120px/帧)
+            let speedX = (Math.random() - 0.5) * 120; 
+            let speedY = (Math.random() - 0.5) * 120; 
             let scale = Math.random() * 2;
-            let scaleDirection = Math.random() > 0.5 ? 0.15 : -0.15;
+            let scaleDirection = Math.random() > 0.5 ? 0.3 : -0.3; // 极速缩放
             let rotation = Math.random() * 360;
-            let rotationSpeed = (Math.random() - 0.5) * 40; // 极速自转
+            let rotationSpeed = (Math.random() - 0.5) * 80; // 极速自转
 
             function animate() {
                 posX += speedX;
@@ -137,20 +148,21 @@
                 scale += scaleDirection;
                 rotation += rotationSpeed;
 
-                // 碰到边界瞬间反弹
-                if (posX < -300 || posX > window.innerWidth + 300) speedX *= -1;
+                // 越界反弹
+                if (posX < -400 || posX > window.innerWidth + 400) speedX *= -1;
                 if (posY < -100 || posY > window.innerHeight + 100) speedY *= -1;
 
-                // 极限缩放频率
-                if (scale > 3.0 || scale < 0.3) scaleDirection *= -1;
+                // 巨大化和缩小高频交替
+                if (scale > 3.5 || scale < 0.2) scaleDirection *= -1;
 
-                // 极高概率（每帧 10% 概率）发生没有任何规律的突然变向、变速，造成“乱窜”的视觉冲击
-                if (Math.random() > 0.90) {
-                    speedX = (Math.random() - 0.5) * 60;
-                    speedY = (Math.random() - 0.5) * 60;
+                // 每帧有 15% 的极高概率瞬间改变轨迹和速度，达成闪烁乱窜效果
+                if (Math.random() > 0.85) {
+                    speedX = (Math.random() - 0.5) * 120;
+                    speedY = (Math.random() - 0.5) * 120;
+                    el.style.color = neonColors[Math.floor(Math.random() * neonColors.length)]; // 连文字颜色都在闪烁变色
                 }
 
-                // 渲染位置与变形
+                // 应用超频矩阵形变
                 el.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
                 el.style.left = `${posX}px`;
                 el.style.top = `${posY}px`;
@@ -161,7 +173,7 @@
             requestAnimationFrame(animate);
         }
 
-        // 屏幕尺寸改变自适应
+        // 窗口大小改变自适应
         window.addEventListener('resize', () => {
             const elements = document.querySelectorAll('.chaotic-text');
             elements.forEach(el => {
